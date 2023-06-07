@@ -13,6 +13,10 @@
     "new": "modern new",
     "upgrade": "modern upgrade"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/caohuilin/module-action-test-2"
+  },
   "dependencies": {},
   "peerDependencies": {},
   "devDependencies": {
