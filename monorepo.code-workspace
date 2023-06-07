@@ -1,6 +1,10 @@
 {
   "folders": [
     {
+      "name": "module-action-test-2",
+      "path": "packages/module-action-test-2/"
+    },
+    {
       "name": "monorepo",
       "path": "."
     }
@@ -28,7 +32,10 @@
       "**/bower_components": true
     },
     //
-    "editor.rulers": [80, 120],
+    "editor.rulers": [
+      80,
+      120
+    ],
     "files.eol": "\n",
     "files.trimTrailingWhitespace": true,
     "files.insertFinalNewline": true,

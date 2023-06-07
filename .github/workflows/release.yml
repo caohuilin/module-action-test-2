@@ -1,0 +1,66 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        type: choice
+        description: 'Release Version(canary, alpha, beta, latest)'
+        required: true
+        default: 'canary'
+        options:
+        - canary
+        - alpha
+        - beta
+        - latest
+      branch:
+        description: 'Release Branch(confirm release branch)'
+        required: true
+        default: 'main'
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        with:
+        # This makes Actions fetch only one branch to release
+          fetch-depth: 1
+
+      - name: Install Pnpm
+        run: corepack enable
+
+      - name: Setup Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install --ignore-scripts
+
+      - name: Prepare
+        run: pnpm run prepare
+
+      - name: Release
+        uses: web-infra-dev/actions@feat-release-provenance
+        with:
+          # this expects you to have a script called release which does a build for your packages and calls changeset publish
+          version: ${{ github.event.inputs.version }}
+          branch: ${{ github.event.inputs.branch }}
+          type: 'release'
+          tools: 'modern'
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_SCOPED_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
+          REF: ${{ github.ref }}
